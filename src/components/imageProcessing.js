@@ -1,6 +1,4 @@
-import mergeImages from 'merge-images';
-
-global.Buffer = global.Buffer || require('buffer').Buffer;
+import avoidSameOriginPolicyProblem from './avoid-same-origin-policy-problem.js';
 
 const axios = require("axios");
 // const cheerio = require("cheerio");
@@ -11,25 +9,9 @@ function validImageURLsFromString(str) {
 	return targetURL.match(pattern);
 }
 
-// function list2KeyValueList(list, foreword) {
-//     let returnList = [];
-//     for (let i = 0; i < list.length; i++) {
-//         let obj = {};
-//         let key = foreword + '-' + i;
-//         obj[key] = list[i];
-//         returnList.push(obj);
-//     }
-//     console.log(returnList);
-//     return returnList;
-// }
-
 async function getHTML(url) {
-	const allOriginsAPI = 'https://api.allorigins.win/get?url=';
-	// allOrigins => https://allorigins.win/
-	// Pull contents from any page via API (as JSON/P or raw) and avoid Same-origin policy problems.
-
 	try {
-		return await axios.get(allOriginsAPI + encodeURIComponent(url));
+		return await axios.get(avoidSameOriginPolicyProblem(encodeURIComponent(url), 'url'));
 	} catch (error) {
 		alert(error);
 	}
@@ -45,12 +27,9 @@ function getMetaData(url) {
 	})
 }
 
-function rawImageDataToImage(url) {
+export function rawImageDataToImage(url) {
 	return new Promise(function(resolve, reject) {
-		const allOriginsAPI = 'https://api.allorigins.win/raw?url=';
-		console.log(url);
-
-		axios.get(allOriginsAPI + encodeURIComponent(url), {
+		axios.get(avoidSameOriginPolicyProblem(encodeURIComponent(url), 'raw'), {
 			responseType: 'arraybuffer',
 		}).then(response => {
 			let blob = new Blob([response.data],
@@ -61,7 +40,7 @@ function rawImageDataToImage(url) {
 	})
 }
 
-function getCanvasSize(metadatas) {
+export function getCanvasSize(metadatas) {
 	let imageHeight = 0;
 	let imageWidth = 0;
 	metadatas.forEach((metadata) => {
@@ -72,44 +51,10 @@ function getCanvasSize(metadatas) {
 	return [imageWidth, imageHeight];
 }
 
-export async function merge(urls, metas) {
-	console.log(metas);
-	if(urls.length != metas.length) {
-		alert('something wrong!!!!');
-		return;
-	}
-
-	// set background image
-	let canvasSize = getCanvasSize(metas);
-	let canvas = document.createElement("CANVAS");
-	canvas.width = canvasSize[0];
-	canvas.height = canvasSize[1];
-	let ctx = canvas.getContext("2d");
-	ctx.fillStyle = "white";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-	let lastImagePos = 0;
-	let mergeImageArrayFormat = [{ src: canvas.toDataURL(), x:0, y:0 }];
-
-	for(let i = 0; urls.length > i; i++) {
-		await rawImageDataToImage(urls[i]).then(convertedURL => {
-			mergeImageArrayFormat.push({ src: convertedURL, x: 0, y: lastImagePos})
-			lastImagePos += metas[i][1];
-		});
-	}
-
-	mergeImages(mergeImageArrayFormat).then(b64 => document.getElementById('new').src = b64);
-}
-
-export function getImages(url) {
-	return 'yes';
-};
-
 export async function discoverURLs(url) {
 	let validURLs;
 	await getHTML(url).then(html => {
 		validURLs = validImageURLsFromString(html.data.contents);
-		console.log(html.data.contents);
 	});
 
 	// drop duplicate links
