@@ -4,7 +4,7 @@ import ProgressBar from './progressbar.js';
 import { getCanvasSize, rawImageDataToImage, discoverURLs, getMetaDatas } from './imageProcessing.js';
 import mergeImages from 'merge-images';
 
-class Translator extends React.Component {
+class MainFunction extends React.Component {
 	constructor() {
 		super();
 		this.state = {
@@ -118,4 +118,4 @@ class Translator extends React.Component {
 	};
 }
 
-export default Translator;
+export default MainFunction;

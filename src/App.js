@@ -1,14 +1,14 @@
 import React from 'react';
 import Footer from './layout/footer.js';
 import Header from './layout/header.js';
-import Translator from './components/translator.js';
+import MainFunction from './components/mainFunction.js';
 import './App.css';
 
 function App() {
   	return (
 	  	<div className="App">
 			<Header />
-			<Translator />
+			<MainFunction />
 			<Footer />
 	  	</div>
   	);
