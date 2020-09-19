@@ -1,5 +1,7 @@
 import mergeImages from 'merge-images';
 
+global.Buffer = global.Buffer || require('buffer').Buffer;
+
 const axios = require("axios");
 // const cheerio = require("cheerio");
 
@@ -43,6 +45,22 @@ function getMetaData(url) {
 	})
 }
 
+function rawImageDataToImage(url) {
+	return new Promise(function(resolve, reject) {
+		const allOriginsAPI = 'https://api.allorigins.win/raw?url=';
+		console.log(url);
+
+		axios.get(allOriginsAPI + encodeURIComponent(url), {
+			responseType: 'arraybuffer',
+		}).then(response => {
+			let blob = new Blob([response.data],
+								{type: response.headers['content-type']});
+			let imgUrl = URL.createObjectURL(blob);
+			resolve(imgUrl);
+		});
+	})
+}
+
 function getCanvasSize(metadatas) {
 	let imageHeight = 0;
 	let imageWidth = 0;
@@ -54,7 +72,7 @@ function getCanvasSize(metadatas) {
 	return [imageWidth, imageHeight];
 }
 
-export function merge(urls, metas) {
+export async function merge(urls, metas) {
 	console.log(metas);
 	if(urls.length != metas.length) {
 		alert('something wrong!!!!');
@@ -74,14 +92,13 @@ export function merge(urls, metas) {
 	let mergeImageArrayFormat = [{ src: canvas.toDataURL(), x:0, y:0 }];
 
 	for(let i = 0; urls.length > i; i++) {
-		mergeImageArrayFormat.push({ src: urls[i], x: 0, y: lastImagePos})
-		lastImagePos += metas[i][1];
+		await rawImageDataToImage(urls[i]).then(convertedURL => {
+			mergeImageArrayFormat.push({ src: convertedURL, x: 0, y: lastImagePos})
+			lastImagePos += metas[i][1];
+		});
 	}
-	console.log(mergeImageArrayFormat);
 
-	mergeImages(mergeImageArrayFormat, {
-		crossOrigin: 'anonymous',
-	}).then(b64 => document.getElementById('new').src = b64);
+	mergeImages(mergeImageArrayFormat).then(b64 => document.getElementById('new').src = b64);
 }
 
 export function getImages(url) {
@@ -110,8 +127,9 @@ export async function getMetaDatas(urls) {
 	let metaDatas = [];
 
 	for(const url of urls) {
-		let meta = await getMetaData(url);
-		metaDatas.push(meta);
+		await getMetaData(url).then(meta => {
+			metaDatas.push(meta);
+		})
 	}
 
 	return metaDatas;
