@@ -3,6 +3,7 @@ import AddressForm from './addressForm.js';
 import ProgressBar from './progressbar.js';
 import { getCanvasSize, rawImageDataToImage, discoverURLs, getMetaDatas } from './imageProcessing.js';
 import mergeImages from 'merge-images';
+import * as message from './messages.js';
 
 class MainFunction extends React.Component {
 	constructor() {
@@ -11,12 +12,18 @@ class MainFunction extends React.Component {
 			targetURL: '',
 			imageURLs: [],
 			imagesMeta: [],
-			progress: '',
+			imageBackgroundColor: 'white',
+			progress: [0, '', 0], // { step : 0, message : '' , end point : 0 } end point will setted up after finding image.
+			lan: 'en',
 		};
 	}
 
-	updateProgress = (p) => {
-		this.setState({ progress: p });
+	updateProgress = (m, gotEndPoint=0) => {
+		if(this.state.progress[2] !== 0) { // When it got the end point of the progress, keep it in the array
+			this.setState({ progress: [m['step'], m[this.state.lan], this.state.progress[2]] });
+		} else { // First initialize of the end point.
+			this.setState({ progress: [m['step'], m[this.state.lan], gotEndPoint] });
+		}
 	}
 
 	// using this function from addressForm.js. passed from render>div>AddressForm as adrf.
@@ -26,57 +33,64 @@ class MainFunction extends React.Component {
 
 	merge = () => {
 		if(!this.state.targetURL) {
-			this.updateProgress('PLEASE ENTER A CORRECT URL');
+			this.updateProgress(message.WRONG_URL());
 			return;
 		}
 
-		this.updateProgress('FINDING IMAGES FROM GIVEN URL...');
+		this.updateProgress(message.FINDING_IMG());
 
 		// find image file links from target url
 		discoverURLs(this.state.targetURL)
 			.then(array => {
 				if(array == null) {
 
-					this.updateProgress('IMAGE NOT FOUND FROM GIVEN URL');
+					this.updateProgress(message.IMG_NOT_FOUND());
 
 					return;
 				}
 				// set state after got all image file links
 				this.setState({ imageURLs: array });
 
-				this.updateProgress(array.length + ' IMAGES FOUND AND GETTING METADATAS...');
+				// Send end point of the progress.
+				this.updateProgress(message.IMGS_FOUND(array.length), message.getEndPoint(array.length));
 
 				// get metadatas from image file links
 				getMetaDatas(this.state.imageURLs).then(metadatas => {
 
 					this.setState({ imagesMeta: metadatas });
 
-					this.updateProgress('DONE! START TO MERGE');
-
 					this.fetchImages().then((mergeImageArrayFormat) => {
-						mergeImages(mergeImageArrayFormat).then(b64 => document.getElementById('new').src = b64);
+						this.updateProgress(message.START_MERGE(this.state.imageURLs.length));
+						mergeImages(mergeImageArrayFormat).then(b64 =>{
+							let img = document.getElementById('new');
+							img.onload = () => {
+								this.updateProgress(message.ALL_DONE(this.state.imageURLs.length));
+							}
+							img.src = b64;
+						});
 
 					}).finally(() => {
-						this.updateProgress('ALL DONE!');
+						// ALL_DONE ( array length for keep step count. )
+						this.updateProgress(message.DISPLAYING(this.state.imageURLs.length));
 					});
 
 				}).catch((error) => {
-					console.log(error)
+					this.updateProgress(message.IMG_NOT_FOUND());
 				});
 			})
 			.catch((error) => {
-				console.log(error);
+				this.updateProgress(message.WRONG_URL());
 			});
 	}
 
 	fetchImages = async () => {
 		if(this.state.imageURLs.length !== this.state.imagesMeta.length) {
-			this.updateProgress('SOMETHING WRONG!');
+			this.updateProgress(message.SOMETHING_WRONG);
 			return;
 		}
 
 
-		this.updateProgress('PREPARING BACKGROUND IMAGE...');
+		this.updateProgress(message.PP_BACK());
 
 		// set background image
 		let canvasSize = getCanvasSize(this.state.imagesMeta);
@@ -84,7 +98,7 @@ class MainFunction extends React.Component {
 		canvas.width = canvasSize[0];
 		canvas.height = canvasSize[1];
 		let ctx = canvas.getContext("2d");
-		ctx.fillStyle = "white";
+		ctx.fillStyle = this.state.imageBackgroundColor;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		let lastImagePos = 0;
@@ -92,7 +106,7 @@ class MainFunction extends React.Component {
 
 		for(let i = 0; this.state.imageURLs.length > i; i++) {
 
-			this.updateProgress('GETTING IMAGE FROM URL... (' + (i+1) + '/' + this.state.imageURLs.length + ')');
+			this.updateProgress(message.GETTING_IMG(i+1, this.state.imageURLs.length));
 
 			await rawImageDataToImage(this.state.imageURLs[i]).then(convertedURL => {
 				mergeImageArrayFormat.push({ src: convertedURL, x: 0, y: lastImagePos})
@@ -106,12 +120,9 @@ class MainFunction extends React.Component {
 	render() {
 		return (
 			<div>
-				<ProgressBar progress={this.state.progress}/>
 
-				{this.state.targetURL ? 'true' : ''}
+				<AddressForm adrf={this.gotURL} merge={this.merge} progress={this.state.progress}/>
 
-				<AddressForm adrf={this.gotURL} />
-				<button onClick={this.merge}>click</button>
 				<img src="" id="new"/>
 			</div>
 		);

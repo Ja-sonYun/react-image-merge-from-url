@@ -1,4 +1,14 @@
 import React from 'react';
+import './addressForm.css';
+import { Button, CircularProgress, LinearProgress } from '@material-ui/core';
+
+function ButtonComponent(props) {
+	const { onClick, loading } = props;
+	return (
+		<Button variant="contained" onClick={onClick} disabled={loading}>
+		</Button>
+	)
+}
 
 function validURL(str) {
 	let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -16,18 +26,76 @@ class AddressForm extends React.Component {
 		super();
 		this.state = {
 			url: '',
-			isValidURL: false
+			isValidURL: '',
 		};
+
+		this.wrapperRef = React.createRef();
+		this.setWrapperRef = this.setWrapperRef.bind(this);
+		this.handleClickOutside = this.handleClickOutside.bind(this);
+	}
+
+	componentDidMount() {
+		document.addEventListener('mousedown', this.handleClickOutside);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleClickOutside);
+	}
+
+	setWrapperRef(node) {
+		this.wrapperRef = node;
+	}
+
+	handleClickOutside(event) {
+		if (this.wrapperRef && !this.wrapperRef.current.contains(event.target) && this.state.isValidURL[this.state.isValidURL.length-1] !== 't') {
+			let lightStatus = this.state.isValidURL ? this.state.isValidURL + '-light' : '';
+			this.setState({ isValidURL: lightStatus });
+		}
+	}
+
+	regetStatus = () => {
+		if(!this.state.isValidURL) {
+			this.setState({ isValidURL: 'clicked' });
+		} else {
+			if(this.state.isValidURL[this.state.isValidURL.length-1] === 't') {
+				this.setState({ isValidURL: this.state.isValidURL.slice(0, -6) });
+			}
+		}
 	}
 
 	sendURL = (event) => {
-		this.props.adrf(validURL(event.target.value) ? event.target.value : '');
+		if(validURL(event.target.value)) {
+			this.setState({ isValidURL: 'valid' });
+			this.props.adrf(event.target.value);
+		} else {
+			if(event.target.value === '') {
+				this.setState({ isValidURL: '' });
+			} else {
+				this.setState({ isValidURL: 'invalid' });
+			}
+			this.props.adrf('');
+		}
+	}
+
+	stepToPercentage = () => {
+		if(this.props.progress[2] === 0) {
+			return 0;
+		}
+		return (this.props.progress[0]/this.props.progress[2]) * 100;
 	}
 
 	render() {
 		return (
 			<div>
-				<input type="text" onChange={this.sendURL}/>
+				<input onClick={this.regetStatus} ref={this.wrapperRef} placeholder="Enter URL here..." className={this.state.isValidURL} type="text" onChange={this.sendURL}/>
+				<br />
+				<div id="buttonSection">
+					<button onClick={this.props.merge}><span>Merge</span></button>
+				</div>
+				<div id="progressSection">
+					<LinearProgress variant="determinate" value={this.props.progress[2]===0 ? 0 : (this.props.progress[0]/this.props.progress[2]) * 100}/>
+					<p id="progressInfo">{ this.props.progress[1] }</p>
+				</div>
 			</div>
 		);
 	};
