@@ -1,7 +1,7 @@
 input {
 	width: 90%;
 	box-sizing: border-box;
-	border: 2px solid #ccc;
+	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 10px 15px;
 }
