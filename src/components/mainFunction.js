@@ -3,7 +3,7 @@ import AddressForm from './addressForm.js';
 import ProgressBar from './progressbar.js';
 import { getCanvasSize, rawImageDataToImage, discoverURLs, getMetaDatas } from './imageProcessing.js';
 import mergeImages from 'merge-images';
-import * as message from './messages.js';
+import * as message from '../messages.js';
 
 class MainFunction extends React.Component {
 	constructor() {
@@ -121,7 +121,7 @@ class MainFunction extends React.Component {
 		return (
 			<div>
 
-				<AddressForm adrf={this.gotURL} merge={this.merge} progress={this.state.progress}/>
+				<AddressForm adrf={this.gotURL} merge={this.merge} progress={this.state.progress} lan={this.props.lan}/>
 
 				<img src="" id="new"/>
 			</div>

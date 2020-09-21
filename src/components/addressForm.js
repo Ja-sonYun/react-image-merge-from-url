@@ -1,14 +1,15 @@
 import React from 'react';
 import './addressForm.css';
+import * as message from '../messages.js';
 import { Button, CircularProgress, LinearProgress } from '@material-ui/core';
 
 function ButtonComponent(props) {
-	const { onClick, loading } = props;
+	const { onClick, loading, lan } = props;
 	return (
 		<div id="buttonSection">
 			<button onClick={onClick}><span>
 			{loading && <CircularProgress size={14}/>}
-			{!loading && 'Merge'}
+			{!loading && message.MERGE_M()[lan]}
 </span></button>
 		</div>
 	);
@@ -88,16 +89,20 @@ class AddressForm extends React.Component {
 		return (this.props.progress[0]/this.props.progress[2]) * 100;
 	}
 
+	m = (i) => {
+		return i[this.props.lan];
+	}
+
 	render() {
 		let progress = this.props.progress[2] === 0 ? 0 : (this.props.progress[0] / this.props.progress[2]) * 100;
 		let isLoading = (progress < 100 && progress > 0) ? true : false;
 
 		return (
 			<div>
-				<input onClick={this.regetStatus} ref={this.wrapperRef} placeholder="Enter URL here..." className={this.state.isValidURL} type="text" onChange={this.sendURL}/>
+				<input onClick={this.regetStatus} ref={this.wrapperRef} placeholder={this.m(message.ENTER_URL_HERE())} className={this.state.isValidURL} type="text" onChange={this.sendURL}/>
 				<br />
 				<div id="progressSection">
-					<ButtonComponent onClick={this.props.merge} loading={isLoading} />
+					<ButtonComponent onClick={this.props.merge} loading={isLoading} lan={this.props.lan} />
 					{ isLoading && <LinearProgress variant="determinate" value={this.props.progress[2]===0 ? 0 : progress}/>}
 					<p id="progressInfo">{ this.props.progress[1] }</p>
 				</div>
