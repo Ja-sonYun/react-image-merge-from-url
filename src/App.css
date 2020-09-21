@@ -1,5 +1,11 @@
 .App {
+	position: relative;
+	min-height: 100vh;
   text-align: center;
+}
+
+.FooterSection {
+	margin-bottom: 200px;
 }
 
 .App-logo {
