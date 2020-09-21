@@ -13,7 +13,7 @@ function App() {
   	return (
 	  	<div className="App">
 			<Header setLan={ setLanguage } lan={lan}/>
-			<MainFunction lan={lan}/>
+			<MainFunction className="main-content" lan={lan}/>
 			<Footer/>
 	  	</div>
   	);

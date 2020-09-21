@@ -4,3 +4,7 @@
 	min-height: 100vh;
 	text-align: center;
 }
+
+.main-content {
+	flex: 1;
+}
