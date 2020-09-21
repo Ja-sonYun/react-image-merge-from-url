@@ -62,11 +62,12 @@ class MainFunction extends React.Component {
 					this.fetchImages().then((mergeImageArrayFormat) => {
 						this.updateProgress(message.START_MERGE(this.state.imageURLs.length));
 						mergeImages(mergeImageArrayFormat).then(b64 =>{
-							let img = document.getElementById('new');
-							img.onload = () => {
-								this.updateProgress(message.ALL_DONE(this.state.imageURLs.length));
-							}
-							img.src = b64;
+							let link = document.createElement('a');
+							this.updateProgress(message.ALL_DONE(this.state.imageURLs.length));
+							link.innerHTML = "download image";
+							link.href = b64;
+							link.download = "merged-image.png";
+							document.getElementById("resultImageSection").appendChild(link);
 						});
 
 					}).finally(() => {
@@ -126,8 +127,8 @@ class MainFunction extends React.Component {
 			<div>
 
 				<AddressForm adrf={this.gotURL} merge={this.merge} progress={this.state.progress} lan={this.props.lan}/>
-
-				<img src="" id="new" style={imgStyle}/>
+				<div id="resultImageSection">
+				</div>
 			</div>
 		);
 	};

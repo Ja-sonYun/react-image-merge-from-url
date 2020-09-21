@@ -2,7 +2,7 @@
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	background: #e8e8e8;
+	/* background: #e8e8e8; */
 	font-size: 12px;
 	color: gray;
 	font-family:'Courier New';
@@ -11,13 +11,4 @@
 
 .footer-content {
 	text-align: center;
-}
-
-#lanSelection {
-	position: absolute;
-	right: 0;
-	bottom:0;
-	padding-right: 15px;
-	padding-bottom: 10px;
-
 }

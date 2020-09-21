@@ -12,3 +12,10 @@
 	padding: 10px 25px;
 	font-variant: small-caps;
 }
+
+#lanSelection {
+	position: absolute;
+	top: 0;
+	padding-right: 15px;
+
+}
