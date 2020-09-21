@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+document.title = "Image Merger";
+
 ReactDOM.render(
     <App />,
   document.getElementById('root')
