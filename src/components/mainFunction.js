@@ -120,7 +120,7 @@ class MainFunction extends React.Component {
 	render() {
 		// make a distance between footer and the result image.
 		const imgStyle = {
-			paddingBottom: "100px"
+			paddingBottom: "150px"
 		};
 		return (
 			<div>

@@ -7,10 +7,10 @@ function ButtonComponent(props) {
 	const { onClick, loading, lan } = props;
 	return (
 		<div id="buttonSection">
-			<button onClick={onClick}><span>
-			{loading && <CircularProgress size={14}/>}
-			{!loading && message.MERGE_M()[lan]}
-</span></button>
+			<Button variant="outlined" onClick={onClick}>
+				{loading && <CircularProgress size={14}/>}
+				{!loading && message.MERGE_M()[lan]}
+			</Button>
 		</div>
 	);
 }
