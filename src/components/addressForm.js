@@ -5,9 +5,13 @@ import { Button, CircularProgress, LinearProgress } from '@material-ui/core';
 function ButtonComponent(props) {
 	const { onClick, loading } = props;
 	return (
-		<Button variant="contained" onClick={onClick} disabled={loading}>
-		</Button>
-	)
+		<div id="buttonSection">
+			<button onClick={onClick}><span>
+			{loading && <CircularProgress size={14}/>}
+			{!loading && 'Merge'}
+</span></button>
+		</div>
+	);
 }
 
 function validURL(str) {
@@ -85,15 +89,16 @@ class AddressForm extends React.Component {
 	}
 
 	render() {
+		let progress = this.props.progress[2] === 0 ? 0 : (this.props.progress[0] / this.props.progress[2]) * 100;
+		let isLoading = (progress < 100 && progress > 0) ? true : false;
+
 		return (
 			<div>
 				<input onClick={this.regetStatus} ref={this.wrapperRef} placeholder="Enter URL here..." className={this.state.isValidURL} type="text" onChange={this.sendURL}/>
 				<br />
-				<div id="buttonSection">
-					<button onClick={this.props.merge}><span>Merge</span></button>
-				</div>
 				<div id="progressSection">
-					<LinearProgress variant="determinate" value={this.props.progress[2]===0 ? 0 : (this.props.progress[0]/this.props.progress[2]) * 100}/>
+					<ButtonComponent onClick={this.props.merge} loading={isLoading} />
+					{ isLoading && <LinearProgress variant="determinate" value={this.props.progress[2]===0 ? 0 : progress}/>}
 					<p id="progressInfo">{ this.props.progress[1] }</p>
 				</div>
 			</div>

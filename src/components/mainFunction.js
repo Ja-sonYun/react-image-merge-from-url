@@ -14,15 +14,15 @@ class MainFunction extends React.Component {
 			imagesMeta: [],
 			imageBackgroundColor: 'white',
 			progress: [0, '', 0], // { step : 0, message : '' , end point : 0 } end point will setted up after finding image.
-			lan: 'en',
 		};
 	}
 
 	updateProgress = (m, gotEndPoint=0) => {
+		let ms = m[this.props.lan];
 		if(this.state.progress[2] !== 0) { // When it got the end point of the progress, keep it in the array
-			this.setState({ progress: [m['step'], m[this.state.lan], this.state.progress[2]] });
+			this.setState({ progress: [m['step'], ms, this.state.progress[2]] });
 		} else { // First initialize of the end point.
-			this.setState({ progress: [m['step'], m[this.state.lan], gotEndPoint] });
+			this.setState({ progress: [m['step'], ms, gotEndPoint] });
 		}
 	}
 
