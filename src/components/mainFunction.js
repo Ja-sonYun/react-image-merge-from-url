@@ -121,11 +121,10 @@ class MainFunction extends React.Component {
 	render() {
 		// make a distance between footer and the result image.
 		const imgStyle = {
-			paddingBottom: "150px"
+			paddingTop: "150px"
 		};
 		return (
 			<div>
-
 				<AddressForm adrf={this.gotURL} merge={this.merge} progress={this.state.progress} lan={this.props.lan}/>
 				<div id="resultImageSection">
 				</div>
