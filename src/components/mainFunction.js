@@ -1,6 +1,5 @@
 import React from 'react';
 import AddressForm from './addressForm.js';
-import ProgressBar from './progressbar.js';
 import { getCanvasSize, rawImageDataToImage, discoverURLs, getMetaDatas } from './imageProcessing.js';
 import mergeImages from 'merge-images';
 import * as message from '../messages.js';
@@ -119,10 +118,6 @@ class MainFunction extends React.Component {
 	}
 
 	render() {
-		// make a distance between footer and the result image.
-		const imgStyle = {
-			paddingTop: "150px"
-		};
 		return (
 			<div>
 				<AddressForm adrf={this.gotURL} merge={this.merge} progress={this.state.progress} lan={this.props.lan}/>
