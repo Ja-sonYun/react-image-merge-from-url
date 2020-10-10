@@ -6,6 +6,18 @@
 	padding: 50px 25px;
 }
 
+#abex {
+	font-weight: bold;
+	position: absolute;
+	margin-top: -25px;
+	padding-left: 15px;
+}
+
+a.AbutBlack {
+	color: black;
+	text-decoration: none;
+}
+
 #description {
 	text-align: center;
 	font-size: 12px;
