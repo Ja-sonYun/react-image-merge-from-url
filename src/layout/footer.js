@@ -10,6 +10,7 @@ class Footer extends React.Component {
 				<br />
 				Source Code of this page(github) : <a href="https://github.com/Ja-sonYun/react-image-merge-from-url">here</a>
 				</p>
+				<br />
 			</div>
 		);
 	};
