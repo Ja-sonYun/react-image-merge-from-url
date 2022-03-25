@@ -4,7 +4,7 @@ const axios = require("axios");
 // const cheerio = require("cheerio");
 
 function validImageURLsFromString(str) {
-	let pattern = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*\.(jpg|jpeg|png)/igm;
+	let pattern = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*\.(jpg|jpeg|png)/igm;
 	const targetURL = str;
 	return targetURL.match(pattern);
 }

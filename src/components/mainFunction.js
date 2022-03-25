@@ -108,10 +108,9 @@ class MainFunction extends React.Component {
 
 			this.updateProgress(message.GETTING_IMG(i+1, this.state.imageURLs.length));
 
-			await rawImageDataToImage(this.state.imageURLs[i]).then(convertedURL => {
-				mergeImageArrayFormat.push({ src: convertedURL, x: 0, y: lastImagePos})
-				lastImagePos += this.state.imagesMeta[i][1];
-			});
+			let convertedURL = await rawImageDataToImage(this.state.imageURLs[i]);
+      mergeImageArrayFormat.push({ src: convertedURL, x: 0, y: lastImagePos})
+      lastImagePos += this.state.imagesMeta[i][1];
 		}
 
 		return mergeImageArrayFormat;
