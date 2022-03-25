@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/react-image-merge-from-url/static/css/main.32b44716.chunk.css",
+    "main.js": "/react-image-merge-from-url/static/js/main.fa79aae0.chunk.js",
+    "main.js.map": "/react-image-merge-from-url/static/js/main.fa79aae0.chunk.js.map",
+    "runtime-main.js": "/react-image-merge-from-url/static/js/runtime-main.077e7d38.js",
+    "runtime-main.js.map": "/react-image-merge-from-url/static/js/runtime-main.077e7d38.js.map",
+    "static/js/2.e3158198.chunk.js": "/react-image-merge-from-url/static/js/2.e3158198.chunk.js",
+    "static/js/2.e3158198.chunk.js.map": "/react-image-merge-from-url/static/js/2.e3158198.chunk.js.map",
+    "index.html": "/react-image-merge-from-url/index.html",
+    "precache-manifest.9c9850c3c578aa4b39d7ec244bdfccde.js": "/react-image-merge-from-url/precache-manifest.9c9850c3c578aa4b39d7ec244bdfccde.js",
+    "service-worker.js": "/react-image-merge-from-url/service-worker.js",
+    "static/css/main.32b44716.chunk.css.map": "/react-image-merge-from-url/static/css/main.32b44716.chunk.css.map",
+    "static/js/2.e3158198.chunk.js.LICENSE.txt": "/react-image-merge-from-url/static/js/2.e3158198.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.077e7d38.js",
+    "static/js/2.e3158198.chunk.js",
+    "static/css/main.32b44716.chunk.css",
+    "static/js/main.fa79aae0.chunk.js"
+  ]
+}

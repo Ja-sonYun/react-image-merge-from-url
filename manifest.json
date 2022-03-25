@@ -1,0 +1,8 @@
+{
+  "short_name": "Image Merger",
+  "name": "Image Merger",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
